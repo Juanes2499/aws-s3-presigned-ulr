@@ -1,3 +1,6 @@
+# aws-s3-presigned-url
+Microservices built with Java - Spring Boot and based on Clean Architecture to generate a pre-signed URL of an AWS S3 Bucket object
+
 ## Create src/main/resources/application.properties
 ```
 spring.application.name=ms_s3_presigned_url
