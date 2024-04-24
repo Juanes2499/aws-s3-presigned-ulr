@@ -97,3 +97,8 @@ docker build --platform linux/x86_64 -f deployment/Dockerfile.build -t poc/aws-m
 ```
 docker-compose -f deployment/docker-compose.build.yml up -d
 ```
+
+# Run from registry
+```
+docker-compose -f deployment/docker-compose.registry.yml up -d
+```

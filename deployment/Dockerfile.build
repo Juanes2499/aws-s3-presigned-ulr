@@ -1,24 +1,40 @@
 FROM eclipse-temurin:17-jdk-alpine AS builder
 
+# Set working directory for Gradle
 WORKDIR /app
 
+# Copy project files
 COPY . .
 
+# Install Gradle
 RUN apk add --no-cache gradle
 
+# Build the application using Gradle
 RUN gradle bootjar
 
+# Create a slimmer runtime image based on the builder image
 FROM eclipse-temurin:17-jre-alpine
 
+# Set working directory for built JAR
 WORKDIR /app
 
+# Copy the built JAR from the builder stage
 COPY --from=builder /app/build/libs/MsS3PresignedUrlApplication.jar MsS3PresignedUrlApplication.jar
+
+# Copy AWS Credentials from the builder stage
 COPY --from=builder /app/credentials credentials
 
+# Create AWS Credentials folder
 RUN mkdir ~/.aws
 
+# Copy AWS Credentials to AWS Credentials folder
 RUN cp /app/credentials  ~/.aws/credentials
 
+# Delete credentials from /app
+RUN rm /app/credentials
+
+# Expose the port where your API listens
 EXPOSE 8090
 
+# Start the application using the JAR
 ENTRYPOINT ["java", "-jar", "/app/MsS3PresignedUrlApplication.jar"]
