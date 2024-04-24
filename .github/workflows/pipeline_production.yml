@@ -56,11 +56,11 @@ jobs:
       - name: List directory to check
         run: ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
 
-      - name: Move credentials files
+      - name: Move AWS credentials file
         run: mv ${PWD}/environmentsTempFiles/credentials ${PWD}/credentials
 
-      - name: Move credentials files
-        run: mv ${PWD}/environmentsTempFiles/application.properties ${PWD}/src/main/resources/application.properties
+      - name: Move /application.properties file
+        run: mkdir ${PWD}/src/main/resources  mv ${PWD}/environmentsTempFiles/application.properties ${PWD}/src/main/resources/application.properties
 
       # - name: Login to Docker Hub
       #   uses: docker/login-action@v2
