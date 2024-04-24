@@ -48,7 +48,7 @@ jobs:
           path: environmentsTempFiles
 
       - name: List directory to check
-        run: ls
+        run: ls -ls src/main/resources
 
       - name: Move credentials files
         run: mv ${PWD}/environmentsTempFiles/credentials ${PWD}/credentials
