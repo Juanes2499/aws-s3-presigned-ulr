@@ -1,0 +1,69 @@
+name: Build, Publish Docker Hub to PRODUCTION
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  create_environment_file:
+    name: build-and-push
+    runs-on: ubuntu-latest
+    environment: PRODUCTION
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+
+      - name: Create - AWS credentials file
+        run: |
+          echo "[default]" > credentials
+          echo "aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID }}" > credentials
+          echo "aws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY_ID }}" > credentials
+      - name: Create application.properties file
+        run: |
+          echo "spring.application.name=${{ secrets.SPRING_APPLICATION_NAME }}" > application.properties
+          echo "server.port=${{ secrets.SERVER_PORT }}" > application.properties
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: environment-files
+          path: |
+            credentials
+            application.properties
+
+  build_and_push:
+    name: build-and-push
+    needs: create_environment_file
+    runs-on: ubuntu-latest
+    environment: PRODUCTION
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: environment-files
+          path: environmentsTempFiles
+
+      - name: Move environment files
+        run: |
+          mv environmentsTempFiles/credentials ./credentials
+          mv environmentsTempFiles/application.properties ./src/main/resources/application.properties
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+      - name: Get tag number
+        run: echo "Tag number -> prod-${{ github.event.release.tag_name }}"
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          dockerfile: deployment/Dockerfile.build
+          tags:  ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.REPOSITORY_NAME }}:prod-${{ github.event.release.tag_name }}

@@ -1,0 +1,17 @@
+FROM eclipse-temurin:17-jdk-alpine
+
+WORKDIR /app
+
+COPY . .
+
+RUN apk add --no-cache gradle
+
+RUN gradle bootjar
+
+RUN mkdir ~/.aws
+
+RUN cp /app/credentials  ~/.aws/credentials
+
+EXPOSE 8090
+
+ENTRYPOINT ["java", "-jar", "/app/build/libs/MsS3PresignedUrlApplication.jar"]

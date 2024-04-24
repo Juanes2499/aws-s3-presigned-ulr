@@ -4,6 +4,7 @@ Microservices built with Java - Spring Boot and based on Clean Architecture to g
 ## Create src/main/resources/application.properties
 ```
 spring.application.name=ms_s3_presigned_url
+server.port=8090
 ```
 
 ## Create an IAM Policy
@@ -50,4 +51,29 @@ You can create or update an AWS credentials file. By default, this file is locat
 [default]
 aws_access_key_id = your_access_key_id
 aws_secret_access_key = your_secret_access_key
+```
+
+# Compile and build Docker
+Set the next code in a file named credentials at root project .
+```
+[default]
+aws_access_key_id = your_access_key_id
+aws_secret_access_key = your_secret_access_key
+```
+
+## Create AWS Credentials File
+
+## Build - Generate .jar
+```
+gradle bootjar
+```
+
+## Create Dockerfile without build
+```
+docker build --platform linux/x86_64 -f deployment/Dockerfile.noBuild -t poc/aws-ms_s3_presigned_ur:1.0 .
+```
+
+## Run in Docker Compose
+```
+docker-compose -f deployment/docker-compose.yml up -d
 ```
