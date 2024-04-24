@@ -33,7 +33,7 @@ jobs:
             application.properties
 
   build_and_push:
-    name: build and push
+    name: Build and push
     needs: create_environment_files
     runs-on: ubuntu-latest
     environment: PRODUCTION
@@ -74,7 +74,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
-          context: .
+          context: ./deployment/
           push: true
-          dockerfile: deployment/Dockerfile.build
+          dockerfile: ./deployment/Dockerfile.build
           tags:  ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.REPOSITORY_NAME }}:prod-${{ github.event.release.tag_name }}
