@@ -59,22 +59,22 @@ jobs:
       - name: Move AWS credentials file
         run: mv ${PWD}/environmentsTempFiles/credentials ${PWD}/credentials
 
-      - name: Move /application.properties file
+      - name: Move application.properties file
         run: mkdir ${PWD}/src/main/resources && mv ${PWD}/environmentsTempFiles/application.properties ${PWD}/src/main/resources/application.properties
 
-      # - name: Login to Docker Hub
-      #   uses: docker/login-action@v2
-      #   with:
-      #     username: ${{ secrets.DOCKER_HUB_USERNAME }}
-      #     password: ${{ secrets.DOCKER_HUB_TOKEN }}
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
-      # - name: Get tag number
-      #   run: echo "Tag number -> prod-${{ github.event.release.tag_name }}"
+      - name: Get tag number
+        run: echo "Tag number -> prod-${{ github.event.release.tag_name }}"
 
-      # - name: Build and push Docker image
-      #   uses: docker/build-push-action@v4
-      #   with:
-      #     context: .
-      #     push: true
-      #     dockerfile: deployment/Dockerfile.build
-      #     tags:  ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.REPOSITORY_NAME }}:prod-${{ github.event.release.tag_name }}
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          dockerfile: deployment/Dockerfile.build
+          tags:  ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.REPOSITORY_NAME }}:prod-${{ github.event.release.tag_name }}
