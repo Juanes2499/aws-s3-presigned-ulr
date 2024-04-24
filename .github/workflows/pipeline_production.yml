@@ -16,8 +16,8 @@ jobs:
       - name: Create - AWS credentials file
         run: |
           echo "[default]" > credentials
-          echo "aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID }}" > credentials
-          echo "aws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY_ID }}" >> credentials
+          echo "aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID }}" >> credentials
+          echo "aws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY_ID }}" >>> credentials
       - name: Create application.properties file
         run:
           echo "spring.application.name=${{ secrets.SPRING_APPLICATION_NAME }}" > application.properties
@@ -47,12 +47,12 @@ jobs:
           path: environmentsTempFiles
 
       - name: Move environment files
-        run: pwd
+        run: |
+          mv /home/runner/work/aws-s3-presigned-url/aws-s3-presigned-url/environmentsTempFiles/credentials /home/runner/work/aws-s3-presigned-url/aws-s3-presigned-url/credentials
+          mv /home/runner/work/aws-s3-presigned-url/aws-s3-presigned-url/environmentsTempFiles/application.properties /home/runner/work/aws-s3-presigned-url/aws-s3-presigned-url/src/main/resources/application.properties
 
-      # - name: Move environment files
-      #   run: |
-      #     mv environmentsTempFiles/credentials credentials
-      #     mv environmentsTempFiles/application.properties src/main/resources/application.properties
+      - name: List
+        run: ls
 
       # - name: Login to Docker Hub
       #   uses: docker/login-action@v2
