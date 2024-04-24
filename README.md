@@ -53,7 +53,9 @@ aws_access_key_id = your_access_key_id
 aws_secret_access_key = your_secret_access_key
 ```
 
-# Compile and build Docker
+# Compile and build in local and create Docker image
+
+## Create AWS Credentials File
 Set the next code in a file named credentials at root project .
 ```
 [default]
@@ -61,19 +63,37 @@ aws_access_key_id = your_access_key_id
 aws_secret_access_key = your_secret_access_key
 ```
 
-## Create AWS Credentials File
-
 ## Build - Generate .jar
 ```
 gradle bootjar
 ```
 
-## Create Dockerfile without build
+## Create Docker image
 ```
-docker build --platform linux/x86_64 -f deployment/Dockerfile.noBuild -t poc/aws-ms_s3_presigned_ur:1.0 .
+docker build --platform linux/x86_64 -f deployment/Dockerfile.noBuild -t poc/aws-ms_s3_presigned_url-nobuild:1.0 .
 ```
 
 ## Run in Docker Compose
 ```
-docker-compose -f deployment/docker-compose.yml up -d
+docker-compose -f deployment/docker-compose.noBuild.yml up -d
+```
+
+# Compile and build in while creating Docker image
+
+## Create AWS Credentials File
+Set the next code in a file named credentials at root project .
+```
+[default]
+aws_access_key_id = your_access_key_id
+aws_secret_access_key = your_secret_access_key
+```
+
+## Create Docker image
+```
+docker build --platform linux/x86_64 -f deployment/Dockerfile.build -t poc/aws-ms_s3_presigned_url-build:1.0 .
+```
+
+## Run in Docker Compose
+```
+docker-compose -f deployment/docker-compose.build.yml up -d
 ```

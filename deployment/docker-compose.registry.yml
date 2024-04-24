@@ -3,6 +3,6 @@ version: '3.8'
 services:
   api:
     container_name: api
-    image: poc/aws-ms_s3_presigned_ur:1.0
+    image: juanes2499/aws-s3-presigned-url:prod-1.1.6
     ports:
       - 8090:8090
