@@ -16,13 +16,13 @@ jobs:
       - name: Create - AWS credentials file
         run: |
           echo "[default]" > credentials
-          echo "aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID }}" >> credentials
-          echo "aws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY_ID }}" >> credentials
+          echo "aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID }}" > credentials
+          echo "aws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY_ID }}" > credentials
 
       - name: Create application.properties file
-        run:
+        run: |
           echo "spring.application.name=${{ secrets.SPRING_APPLICATION_NAME }}" > application.properties
-          echo "server.port=${{ secrets.SERVER_PORT }}" >> application.properties
+          echo "server.port=${{ secrets.SERVER_PORT }}" > application.properties
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
@@ -47,10 +47,10 @@ jobs:
           name: environment-files
           path: environmentsTempFiles
 
-      - name: Move environment files
-        run: |
-          mv /home/runner/work/aws-s3-presigned-url/aws-s3-presigned-url/environmentsTempFiles/credentials /home/runner/work/aws-s3-presigned-url/aws-s3-presigned-url/credentials
-          mv /home/runner/work/aws-s3-presigned-url/aws-s3-presigned-url/environmentsTempFiles/application.properties /home/runner/work/aws-s3-presigned-url/aws-s3-presigned-url/src/main/resources/application.properties
+      # - name: Move environment files
+      #   run: |
+      #     mv /home/runner/work/aws-s3-presigned-url/aws-s3-presigned-url/environmentsTempFiles/credentials /home/runner/work/aws-s3-presigned-url/aws-s3-presigned-url/credentials
+      #     mv /home/runner/work/aws-s3-presigned-url/aws-s3-presigned-url/environmentsTempFiles/application.properties /home/runner/work/aws-s3-presigned-url/aws-s3-presigned-url/src/main/resources/application.properties
 
       - name: List
         run: ls
